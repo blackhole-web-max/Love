@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>有句话想对你说</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,226,189,.95), transparent 32%),
+      radial-gradient(circle at 80% 20%, rgba(255,194,178,.65), transparent 30%),
+      linear-gradient(160deg,#fff5e8 0%,#ffd9c8 48%,#f7b7aa 100%);
+    color:#6d3d32;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      radial-gradient(circle at 30% 60%,rgba(255,255,255,.5) 0 1px,transparent 1.5px),
+      radial-gradient(circle at 70% 40%,rgba(255,255,255,.35) 0 1px,transparent 1.5px);
+    background-size:28px 28px, 34px 34px;
+    opacity:.35;
+    pointer-events:none;
+  }
+
+  .page{
+    position:relative;
+    width:100%;
+    height:100%;
+    display:grid;
+    place-items:center;
+    padding:24px;
+  }
+
+  .card{
+    position:relative;
+    width:min(92vw,620px);
+    min-height:440px;
+    padding:42px 28px 30px;
+    border-radius:34px;
+    background:rgba(255,250,244,.76);
+    border:1px solid rgba(255,255,255,.8);
+    box-shadow:
+      0 20px 60px rgba(139,72,54,.18),
+      inset 0 1px 0 rgba(255,255,255,.9);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    text-align:center;
+    overflow:hidden;
+  }
+
+  .glow{
+    position:absolute;
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    filter:blur(18px);
+    background:rgba(255,187,126,.26);
+    top:-80px;
+    right:-60px;
+  }
+
+  .tiny{
+    font-size:14px;
+    letter-spacing:.18em;
+    color:#bb7664;
+    margin-bottom:18px;
+  }
+
+  h1{
+    margin:0;
+    font-size:clamp(34px,8vw,58px);
+    line-height:1.15;
+    color:#8d4a3a;
+    font-weight:800;
+  }
+
+  .subtitle{
+    margin:18px auto 0;
+    max-width:470px;
+    color:#9a675b;
+    line-height:1.9;
+    font-size:16px;
+  }
+
+  .heart{
+    width:82px;
+    height:82px;
+    margin:28px auto 20px;
+    position:relative;
+    transform:rotate(45deg);
+    background:linear-gradient(135deg,#ff9d7e,#ef6f61);
+    border-radius:18px;
+    box-shadow:0 12px 28px rgba(229,102,82,.28);
+    animation:beat 1.6s ease-in-out infinite;
+  }
+
+  .heart::before,.heart::after{
+    content:"";
+    position:absolute;
+    width:82px;
+    height:82px;
+    border-radius:50%;
+    background:inherit;
+  }
+  .heart::before{left:-41px}
+  .heart::after{top:-41px}
+
+  @keyframes beat{
+    0%,100%{transform:rotate(45deg) scale(1)}
+    50%{transform:rotate(45deg) scale(1.08)}
+  }
+
+  .message{
+    min-height:90px;
+    font-size:18px;
+    line-height:1.9;
+    color:#6f463d;
+    margin:8px auto 18px;
+    max-width:470px;
+    transition:.35s ease;
+  }
+
+  button{
+    border:none;
+    border-radius:999px;
+    padding:14px 24px;
+    font-size:16px;
+    font-weight:700;
+    color:#fffaf6;
+    background:linear-gradient(135deg,#ef8f70,#e46c60);
+    box-shadow:0 10px 24px rgba(213,101,81,.25);
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  button:active{transform:scale(.96)}
+
+  .small-note{
+    margin-top:14px;
+    font-size:12px;
+    color:#b88679;
+  }
+
+  .floating-heart{
+    position:fixed;
+    left:0;
+    top:100vh;
+    pointer-events:none;
+    opacity:0;
+    animation:floatUp linear forwards;
+    filter:drop-shadow(0 6px 8px rgba(183,90,70,.12));
+  }
+
+  @keyframes floatUp{
+    0%{
+      transform:translate3d(var(--x),0,0) scale(.7) rotate(0deg);
+      opacity:0;
+    }
+    10%{opacity:.55}
+    100%{
+      transform:translate3d(calc(var(--x) + var(--drift)),-115vh,0) scale(1.25) rotate(18deg);
+      opacity:0;
+    }
+  }
+
+  .signature{
+    margin-top:20px;
+    color:#a15c4c;
+    font-size:15px;
+  }
+
+  @media(max-height:620px){
+    .card{min-height:auto;padding-top:26px}
+    .heart{width:60px;height:60px;margin:18px auto}
+    .heart::before,.heart::after{width:60px;height:60px}
+    .heart::before{left:-30px}
+    .heart::after{top:-30px}
+  }
+</style>
+<script data-oneopenai-tracker-block>(function(){var K="__oneopenaiTrackerBlock";if(window[K])return;window[K]=true;var B=["browser-intake-datadoghq.com","analytics.tiktok.com","bat.bing.com","snap.licdn.com","www.redditstatic.com","cdn.segment.com","api.segment.io","statsigapi.net","events.statsigcdn.com","api.statsigcdn.com"];function bl(u){if(!u)return false;try{var h=new URL(u,location.href).hostname;return B.some(function(d){return h===d||h.length>d.length&&h.slice(-(d.length+1))==="."+d;});}catch(e){return false;}}var _f=window.fetch;if(typeof _f==="function")window.fetch=function(r,o){var u=typeof r==="string"?r:(r&&typeof r==="object"&&r.url)||"";if(bl(u))return Promise.resolve(new Response("",{status:204}));return _f.apply(this,arguments);};var _xo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u){this._gwb=bl(String(u||""));if(!this._gwb)return _xo.apply(this,arguments);};var _xs=XMLHttpRequest.prototype.send;XMLHttpRequest.prototype.send=function(d){if(!this._gwb)return _xs.call(this,d);};})();</script><script data-oneopenai-sentinel-guard>!function () {
+  var guardKey = "__oneopenaiSentinelGuard";
+  var nativeFetch = window.fetch;
+  var NativeURL = window.URL;
+  var NativeWebSocket = window.WebSocket;
+  var proxyOrigin = location.origin;
+
+
+  if (!nativeFetch || !NativeURL || nativeFetch[guardKey]) {
+    return;
+  }
+
+  function isChatGPTHost(hostname) {
+    var host = (hostname || "").toLowerCase();
+    return host === "chatgpt.com" || host.endsWith(".chatgpt.com");
+  }
+
+  function isOAIUserContentSandboxHost(hostname) {
+    var host = (hostname || "").toLowerCase();
+    var base = "web-sandbox.oaiusercontent.com";
+    return host === base || host.endsWith("." + base);
+  }
+
+  function oaiUserContentSandboxPrefix(hostname) {
+    var host = (hostname || "").toLowerCase();
+    if (host === "web-sandbox.oaiusercontent.com") {
+      return "/web-sandbox-oaiusercontent";
+    }
+    return "/web-sandbox-oaiusercontent-host/" + encodeURIComponent(host);
+  }
+
+  function proxyWebSocketOrigin() {
+    return proxyOrigin.replace(/^http/i, "ws");
+  }
+
+  function hasPathPrefix(pathname, prefix) {
+    return pathname === prefix || pathname.indexOf(prefix + "/") === 0;
+  }
+
+  function rewriteChatGPTPath(pathname) {
+    if (hasPathPrefix(pathname, "/backend-alt")) {
+      return "/backend-api" + pathname.slice("/backend-alt".length);
+    }
+    if (hasPathPrefix(pathname, "/ab")) {
+      return pathname;
+    }
+    return pathname || "/";
+  }
+
+  function normalizeURLString(value) {
+    if (typeof value !== "string") return value;
+    var s = value.trim();
+    if (!s) return value;
+    // 协议相对 //host/... — 之前正则会直接放行导致 iframe 仍直连 web-sandbox.*
+    if (s.indexOf("//") === 0 && s.indexOf("://") === -1) {
+      try {
+        return new NativeURL(s, location.href).href;
+      } catch (e) {
+        return value;
+      }
+    }
+    return s;
+  }
+
+  function rewriteFetchURL(value) {
+    try {
+      value = normalizeURLString(value);
+      if (typeof value !== "string") {
+        return value;
+      }
+      if (!/^https?:\/\//i.test(value) && !/^wss?:\/\//i.test(value)) {
+        return value;
+      }
+
+      var url = new NativeURL(value, location.href);
+      var host = url.hostname.toLowerCase();
+      var path = url.pathname || "/";
+
+
+      if ((host === "127.0.0.1" || host === "localhost") && url.port === "8000" && hasPathPrefix(path, "/api/sentinel")) {
+        url.port = window.location.port;
+        return url.href;
+      }
+
+
+      // web-sandbox.* — 代码预览与深度研究 iframe。
+      // 深度研究使用 connector_*.web-sandbox.oaiusercontent.com，必须保留完整上游 Host。
+      if (host === "web-sandbox.oaistatic.com" || isOAIUserContentSandboxHost(host)) {
+        var prefix = host === "web-sandbox.oaistatic.com" ? "/web-sandbox-oaistatic" : oaiUserContentSandboxPrefix(host);
+        var sandboxPath = url.pathname === "/" || url.pathname === "" ? "" : url.pathname;
+        // 官方 Sandbox SDK 默认要求父页面来源为 chatgpt.com。经 Gateway 改写后 iframe
+        // 实际运行在同源代理路径下，必须启用 SDK 自带的本地代理兼容开关，否则静态资源
+        // 虽然全部 200，iframe 仍会因初始化握手的 target-origin 校验失败而保持空白。
+        url.searchParams.set("unsafeSkipTargetOriginCheck", "true");
+        return proxyOrigin + prefix + sandboxPath + url.search + url.hash;
+      }
+
+      // ws.chatgpt.com — WebSocket 实时推送（画图完成通知等）
+      // 路由到网关 /wschatgpt/*path，由 server.go 的 wsChatGPTHandler 代理到上游
+      if (host === "ws.chatgpt.com") {
+        if (url.protocol === "ws:" || url.protocol === "wss:") {
+          return proxyWebSocketOrigin() + "/wschatgpt" + path + url.search + url.hash;
+        }
+        return proxyOrigin + "/wschatgpt" + path + url.search + url.hash;
+      }
+
+      if (host === "ab.chatgpt.com") {
+        return proxyOrigin + "/ab" + path + url.search + url.hash;
+      }
+
+      if (isChatGPTHost(host)) {
+        var nextPath = rewriteChatGPTPath(path);
+        if (url.protocol === "ws:" || url.protocol === "wss:") {
+          return proxyWebSocketOrigin() + nextPath + url.search + url.hash;
+        }
+        return proxyOrigin + nextPath + url.search + url.hash;
+      }
+    } catch (error) {
+      return value;
+    }
+    return value;
+  }
+
+  // 落到本网关 /ces/* 的请求全是 Statsig 遥测（rgstr / statsc / settings）。
+  //
+  // 根因（已确认，非缓存问题）：Statsig 用 CompressionStream 把 body gzip 成「流式 body」
+  // （ReadableStream + duplex:'half'，URL 上的 gz=1 即此），而 Chrome 规定带流式 body 的
+  // fetch 必须走 HTTP/2，浏览器的 HTTP/2 又只在 TLS 上跑。网关是明文 http，Chrome 在建连
+  // 阶段就 ERR_ALPN_NEGOTIATION_FAILED，请求根本不发出去（curl / Firefox 不强制 h2 所以正常）。
+  // → 这是 Chrome 对「明文 http + 流式 body」的硬限制，任何服务端改动都接不到这个请求，
+  //   真正根治只能给网关上 HTTPS+HTTP/2（如前置 Caddy 终止 TLS）。
+  //
+  // 这些遥测挂掉对功能零影响（只是埋点没上报）。下面的短路逻辑可在「注入了本 guard 的
+  // gateway 页面」上把 /ces 直接合成 200，消掉 Chrome 控制台那片红；但对 xy 等不经过本
+  // guard 的页面无效，所以它只是消噪音、不是根治。当前用 return false 关闭，按需打开。
+  function isLocalCES(value) {
+    // 关闭短路：暂不在客户端假装成功，保留报错以便排查（功能不受影响）。
+    return false;
+
+    try {
+      if (typeof value !== "string") return false;
+      var u = new NativeURL(value, location.href);
+      // 只比对 host（含端口），不比对 scheme：某些构建会把 CES 端点拼成
+      // https://<本机>/ces，而网关只跑明文 http，origin 比对会因 scheme 不一致失败，
+      // 请求漏到网络层触发 ERR_SSL_PROTOCOL_ERROR。落到本网关 /ces 下的请求
+      // 全是 Statsig 遥测，无论 http/https 一律短路。
+      return u.host === location.host && hasPathPrefix(u.pathname, "/ces");
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function cesSuccessResponse() {
+    return new Response('{"success":true}', {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
+  window.fetch = function (resource, init) {
+    try {
+      if (resource && typeof Request !== "undefined" && resource instanceof Request) {
+        var nextURL = rewriteFetchURL(resource.url);
+        if (isLocalCES(nextURL)) {
+          return Promise.resolve(cesSuccessResponse());
+        }
+        if (nextURL !== resource.url) {
+          var nextRequest = init ? new Request(resource, init) : resource;
+          return nativeFetch.call(this, new Request(nextURL, nextRequest));
+        }
+      } else {
+        resource = rewriteFetchURL(resource);
+        if (isLocalCES(resource)) {
+          return Promise.resolve(cesSuccessResponse());
+        }
+      }
+    } catch (error) { }
+
+    return nativeFetch.call(this, resource, init);
+  };
+  window.fetch[guardKey] = true;
+
+  // 同步拦截 new WebSocket(url)，确保 ws://chatgpt.com 等地址经过同一套 rewriteFetchURL 改写，
+  // 而不是直连 chatgpt.com（浏览器无法带上网关注入的 Cookie/Bearer，连接会失败）。
+  if (NativeWebSocket) {
+    function PatchedWebSocket(url, protocols) {
+      var rewritten = rewriteFetchURL(url);
+      if (protocols !== undefined) {
+        return new NativeWebSocket(rewritten, protocols);
+      }
+      return new NativeWebSocket(rewritten);
+    }
+    PatchedWebSocket.prototype = NativeWebSocket.prototype;
+    PatchedWebSocket.CONNECTING = NativeWebSocket.CONNECTING;
+    PatchedWebSocket.OPEN = NativeWebSocket.OPEN;
+    PatchedWebSocket.CLOSING = NativeWebSocket.CLOSING;
+    PatchedWebSocket.CLOSED = NativeWebSocket.CLOSED;
+    window.WebSocket = PatchedWebSocket;
+  }
+
+  // iframe src 由 React 直接 setAttribute / .src 赋值，不经过 fetch；必须在这里改写到网关。
+  var origSetAttribute = Element.prototype.setAttribute;
+  Element.prototype.setAttribute = function (name, value) {
+    try {
+      if (this.tagName === "IFRAME" && name && String(name).toLowerCase() === "src" && typeof value === "string") {
+        var abs = normalizeURLString(value);
+        var rw = rewriteFetchURL(abs);
+        if (rw !== abs) {
+          value = rw;
+        }
+      }
+    } catch (e) { }
+    return origSetAttribute.call(this, name, value);
+  };
+
+  try {
+    var srcDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "src");
+    if (srcDesc && srcDesc.set && srcDesc.get) {
+      Object.defineProperty(HTMLIFrameElement.prototype, "src", {
+        configurable: true,
+        enumerable: srcDesc.enumerable,
+        get: function () {
+          return srcDesc.get.call(this);
+        },
+        set: function (v) {
+          try {
+            if (typeof v === "string") {
+              var abs = normalizeURLString(v);
+              var rw = rewriteFetchURL(abs);
+              v = rw !== abs ? rw : v;
+            }
+          } catch (e) { }
+          srcDesc.set.call(this, v);
+        }
+      });
+    }
+  } catch (e) { }
+
+  function sweepIframeSrc(node) {
+    if (!node) return;
+    if (node.tagName === "IFRAME") {
+      var cur = node.getAttribute("src");
+      if (cur) {
+        var abs = normalizeURLString(cur);
+        var rw = rewriteFetchURL(abs);
+        if (rw !== abs) {
+          origSetAttribute.call(node, "src", rw);
+        }
+      }
+    }
+    if (node.querySelectorAll) {
+      var listnode = node.querySelectorAll("iframe[src]");
+      for (var i = 0; i < listnode.length; i++) sweepIframeSrc(listnode[i]);
+    }
+  }
+
+  function installIframeObserver() {
+    sweepIframeSrc(document.documentElement);
+    if (!window.MutationObserver) return;
+    var mo = new MutationObserver(function (records) {
+      for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        if (r.type === "childList") {
+          for (var j = 0; j < r.addedNodes.length; j++) {
+            var n = r.addedNodes[j];
+            if (n.nodeType === 1) sweepIframeSrc(n);
+          }
+        } else if (r.type === "attributes" && r.target && r.target.tagName === "IFRAME" && r.attributeName === "src") {
+          sweepIframeSrc(r.target);
+        }
+      }
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", installIframeObserver);
+  } else {
+    installIframeObserver();
+  }
+}();
+</script><script src="/_ooa/custom.js" data-oneopenai-custom-js></script><script src="/_ooa/frontend-runtime-guard.js" data-oneopenai-runtime-guard></script><script src="/_ooa/pet.js" data-oneopenai-pet-js defer></script><script src="/_ooa/user-custom.js" data-oneopenai-user-custom-js defer></script><link rel="stylesheet" href="/Static/css/Global.css"/><link rel="stylesheet" href="/Web/css/Global.css"/><link rel="stylesheet" href="/Web/css/OneOpenAI.css"/></head>
+<body>
+<div class="page">
+  <div class="card">
+    <div class="glow"></div>
+    <div class="tiny">TO SOMEONE SPECIAL</div>
+    <h1>有句话，想认真告诉你</h1>
+
+    <p class="subtitle">
+      我想了很久，还是觉得有些心意不该只放在心里。
+    </p>
+
+    <div class="heart"></div>
+
+    <div class="message" id="message">
+      和你相处的每一个普通瞬间，<br>
+      都会让我觉得今天比昨天更值得期待。
+    </div>
+
+    <button id="nextBtn">继续看下去</button>
+
+    <div class="signature">
+      —— 来自一个很在意你的人
+    </div>
+
+    <div class="small-note">没有音乐，只有想对你说的话。</div>
+  </div>
+</div>
+
+<script>
+const lines = [
+  `和你相处的每一个普通瞬间，<br>都会让我觉得今天比昨天更值得期待。`,
+  `我喜欢你笑起来的样子，<br>也喜欢你认真说话时的样子。`,
+  `喜欢这件事并不是突然发生的，<br>而是在一次次想起你的时候慢慢变得确定。`,
+  `所以今天，我想把这句话认真地告诉你：`,
+  `<span style="font-size:30px;font-weight:800;color:#d85f52">我喜欢你。</span><br>如果可以，我想陪你走很久很久。`
+];
+
+let index = 0;
+const msg = document.getElementById('message');
+const btn = document.getElementById('nextBtn');
+
+btn.addEventListener('click', () => {
+  index++;
+  if(index >= lines.length) index = lines.length - 1;
+
+  msg.style.opacity = 0;
+  msg.style.transform = 'translateY(8px)';
+
+  setTimeout(() => {
+    msg.innerHTML = lines[index];
+    msg.style.opacity = 1;
+    msg.style.transform = 'translateY(0)';
+  }, 220);
+
+  if(index === lines.length - 1){
+    btn.textContent = '❤️';
+    burstHearts(18);
+  }
+});
+
+function createHeart(){
+  const el = document.createElement('div');
+  el.className = 'floating-heart';
+  el.textContent = Math.random() > .5 ? '❤' : '♡';
+  el.style.color = Math.random() > .5 ? '#ef8f70' : '#f2ad8d';
+  el.style.fontSize = (14 + Math.random()*22) + 'px';
+  el.style.setProperty('--x', (Math.random()*100) + 'vw');
+  el.style.setProperty('--drift', ((Math.random()-.5)*120) + 'px');
+  el.style.animationDuration = (5 + Math.random()*5) + 's';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),10000);
+}
+
+function burstHearts(n){
+  for(let i=0;i<n;i++){
+    setTimeout(createHeart,i*80);
+  }
+}
+
+setInterval(()=>{
+  if(document.hidden) return;
+  createHeart();
+}, 1100);
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"30828c5c269e4769af1a3a82bcc7279c","spa":2}' crossorigin="anonymous"></script>
+<script src="/Static/js/jquery.js"></script><script src="/Static/js/Global.js"></script><script src="/Web/js/Global.js"></script><script src="/Web/js/OneOpenAI.js"></script></body>
+</html>
