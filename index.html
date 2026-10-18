@@ -1,428 +1,496 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>有些话，想认认真真告诉你</title>
-<style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    margin: 0; padding: 0; width: 100%; height: 100%;
-    overflow: hidden; background: #0a0612;
-    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
-    color: #fff;
-  }
-  #sky { position: fixed; inset: 0; display: block; z-index: 0; }
-
-  .glow {
-    position: fixed; border-radius: 50%; filter: blur(100px);
-    pointer-events: none; z-index: 1; opacity: .3;
-    animation: drift 10s ease-in-out infinite alternate;
-  }
-  .g1 { width: 44vmin; height: 44vmin; left: -10vmin; top: -8vmin; background: #ff2f63; }
-  .g2 { width: 40vmin; height: 40vmin; right: -12vmin; bottom: -10vmin; background: #6f4cff; animation-delay: 3s; }
-  @keyframes drift {
-    from { transform: translate3d(0,0,0) scale(1); }
-    to   { transform: translate3d(4vmin, 3vmin, 0) scale(1.16); }
-  }
-
-  /* ===== 桌面：左爱心 / 右文字 ===== */
-  .copy {
-    position: fixed; z-index: 2;
-    right: 5vw; top: 0; height: 100%;
-    width: 46vw;
-    display: flex; flex-direction: column; justify-content: center;
-    text-align: left;
-    animation: fadeIn 1.4s ease both;
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .lines { display: flex; flex-direction: column; gap: .5em; }
-  .line {
-    font-size: clamp(16px, 1.3vw, 20px);
-    line-height: 1.55; letter-spacing: .05em;
-    text-shadow: 0 2px 14px rgba(0,0,0,.85), 0 0 26px rgba(255, 110, 150, .45);
-    opacity: 0;
-  }
-  .line.show { animation: rise .7s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(14px); filter: blur(6px); }
-    to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
-  }
-  .cursor {
-    display: inline-block; width: 2px; height: 1em; margin-left: 3px;
-    background: #ff6b9d; vertical-align: -0.12em;
-    animation: blink .85s steps(1) infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  #askWrap { margin-top: 4.5vmin; opacity: 0; transition: opacity 1s ease; }
-  #askWrap.show { opacity: 1; }
-  .ask {
-    margin: 0 0 3vmin;
-    font-size: clamp(19px, 2.5vw, 36px); font-weight: 700; letter-spacing: .06em;
-    background: linear-gradient(94deg, #fff 0%, #ffb3cf 45%, #ff5f8f 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 0 22px rgba(255, 90, 140, .55));
-  }
-  .ask.pop { animation: pop .85s cubic-bezier(.2,1.5,.4,1) both; }
-  @keyframes pop { from { opacity: 0; transform: scale(.75); } to { opacity: 1; transform: scale(1); } }
-
-  .btns { display: flex; gap: 3.4vmin; align-items: center; flex-wrap: wrap; }
-  button {
-    font-family: inherit; font-size: clamp(14px, 1.4vw, 19px);
-    padding: .7em 2em; border-radius: 999px; cursor: pointer;
-    border: 1.5px solid rgba(255,255,255,.32);
-    background: rgba(255,255,255,.06); color: #fff;
-    backdrop-filter: blur(8px);
-    transition: transform .18s ease, box-shadow .25s ease;
-  }
-  button:active { transform: scale(.95); }
-  #yesBtn {
-    border-color: transparent; font-weight: 700;
-    background: linear-gradient(120deg, #ff4d7d, #ff8fb3 55%, #ff5f8f);
-    box-shadow: 0 10px 32px rgba(255, 66, 120, .45);
-    animation: beat 1.6s ease-in-out infinite;
-  }
-  #yesBtn:hover { box-shadow: 0 14px 44px rgba(255, 66, 120, .72); }
-  @keyframes beat {
-    0%, 100% { transform: scale(1); }
-    14%      { transform: scale(1.07); }
-    28%      { transform: scale(1); }
-    42%      { transform: scale(1.05); }
-  }
-  #noBtn { position: relative; z-index: 5; }
-  .hint { margin: 2.4vmin 0 0; font-size: clamp(11px, 1.05vw, 13px); color: rgba(255,255,255,.4); }
-  .hint.show { animation: fadeIn 1s ease both; }
-
-  /* ===== 手机：上爱心 / 下文字 ===== */
-  @media (max-width: 899px), (max-height: 560px) {
-    .copy {
-      right: auto; left: 0; top: auto; bottom: 0;
-      width: 100%; max-width: none; height: auto;
-      padding: 5vmin 7vmin 7vmin;
-      justify-content: flex-end;
-      background: linear-gradient(to top, rgba(10,6,18,.96) 42%, rgba(10,6,18,.72) 72%, transparent 100%);
-      text-align: left;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>今天也要元气满满！</title>
+  <style>
+    :root {
+      --red: #f16c59;
+      --yellow: #ffd45c;
+      --blue: #69b9e7;
+      --green: #79c99a;
+      --ink: #34343d;
+      --muted: #88858a;
+      --paper: #fffdf7;
+      --line: #eee5d6;
     }
-    .line { font-size: clamp(14px, 3.9vw, 21px); }
-    .ask {
-      font-size: clamp(17px, 5.2vw, 27px);
-      margin: 3.4vmin 0 2.6vmin;
-      filter: drop-shadow(0 0 16px rgba(255, 90, 140, .6));
-    }
-    .btns { gap: 4vmin; }
-    button { font-size: clamp(13px, 3.6vw, 17px); padding: .62em 1.7em; }
-    #askWrap { margin-top: 0; }
-    .hint { margin-top: 2vmin; }
-  }
 
-  /* ===== 终幕 ===== */
-  .final {
-    position: fixed; inset: 0; z-index: 3;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 2.2vmin; padding: 8vmin; text-align: center;
-    background: radial-gradient(ellipse 62% 46% at 50% 50%, rgba(10,6,18,.9) 0%, rgba(10,6,18,.72) 55%, rgba(10,6,18,0) 100%);
-    opacity: 0; transition: opacity 1.2s ease; pointer-events: none;
-  }
-  .final.show { opacity: 1; }
-  .final h1 {
-    margin: 0; font-size: clamp(24px, 6.4vw, 56px); letter-spacing: .08em;
-    background: linear-gradient(94deg, #fff, #ffb3cf 45%, #ff4d7d);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 0 30px rgba(255, 80, 130, .7));
-  }
-  .final p {
-    margin: 0; font-size: clamp(13px, 2.5vw, 19px); letter-spacing: .04em;
-    color: rgba(255,255,255,.88); text-shadow: 0 2px 12px rgba(0,0,0,.8);
-  }
-  .hidden { display: none !important; }
-</style>
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 16px;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+      background-color: #fff8e9;
+      background-image: radial-gradient(#efdfc7 1px, transparent 1px);
+      background-size: 19px 19px;
+    }
+
+    button, input, select { font: inherit; }
+
+    .app {
+      width: min(100%, 620px);
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 13px;
+      border: 2px dashed #eebc46;
+      border-radius: 999px;
+      color: #936d19;
+      background: #fff0b8;
+      font-size: 13px;
+      transform: rotate(-2deg);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 7vw, 42px);
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card {
+      padding: 24px;
+      border: 3px solid var(--ink);
+      border-radius: 24px 20px 25px 19px;
+      background: var(--paper);
+      box-shadow: 7px 7px 0 var(--ink);
+    }
+
+    .date-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 2px dashed var(--line);
+    }
+
+    .date-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .date {
+      margin-top: 5px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .sticker {
+      display: grid;
+      width: 54px;
+      height: 54px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 17px 13px 18px 14px;
+      background: var(--yellow);
+      font-size: 27px;
+      transform: rotate(5deg);
+    }
+
+    .progress-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 15px;
+      border: 2px solid #e8dfcf;
+      border-radius: 17px;
+      background: #fff9e9;
+    }
+
+    .progress-track {
+      height: 17px;
+      flex: 1;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: repeating-linear-gradient(
+        135deg,
+        var(--yellow),
+        var(--yellow) 10px,
+        #ffe58b 10px,
+        #ffe58b 19px
+      );
+      transition: width .3s ease;
+    }
+
+    .progress-text {
+      min-width: 72px;
+      font-size: 14px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 22px 0 12px;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .section-title small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 57px;
+      padding: 10px 12px;
+      border: 2px solid var(--line);
+      border-radius: 15px 12px 16px 13px;
+      background: white;
+      transition: .2s ease;
+    }
+
+    .task:hover { transform: translateY(-1px) rotate(-.2deg); }
+
+    .task.done {
+      border-color: #a8dcb8;
+      background: #effaf1;
+    }
+
+    .check {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      flex: 0 0 27px;
+      place-items: center;
+      padding: 0;
+      border: 2px solid #c9c3b8;
+      border-radius: 9px;
+      color: white;
+      background: white;
+      cursor: pointer;
+    }
+
+    .task.done .check {
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .task-name {
+      min-width: 0;
+      flex: 1;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+    }
+
+    .task.done .task-name {
+      color: #898f88;
+      text-decoration: line-through;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eaf5ff;
+      color: #4488ae;
+      font-size: 11px;
+    }
+
+    .tag[data-category="生活"] { background: #fff2d1; color: #967424; }
+    .tag[data-category="运动"] { background: #e7f7eb; color: #438b57; }
+    .tag[data-category="其他"] { background: #f3eafe; color: #8660aa; }
+
+    .delete {
+      width: 29px;
+      height: 29px;
+      flex: 0 0 29px;
+      padding: 0;
+      border: 0;
+      border-radius: 9px;
+      color: #aaa;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .delete:hover { color: #c64f45; background: #fff0ed; }
+
+    .empty {
+      padding: 25px 12px;
+      border: 2px dashed #e8dfcf;
+      border-radius: 15px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .add-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .add-form input, .add-form select {
+      min-width: 0;
+      height: 44px;
+      padding: 0 11px;
+      border: 2px solid #e8dfcf;
+      border-radius: 12px;
+      outline: none;
+      background: white;
+    }
+
+    .add-form input:focus, .add-form select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px #69b9e733;
+    }
+
+    .add-button {
+      height: 44px;
+      padding: 0 15px;
+      border: 2px solid var(--ink);
+      border-radius: 12px 10px 13px 11px;
+      color: white;
+      background: var(--red);
+      box-shadow: 3px 3px 0 var(--ink);
+      cursor: pointer;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .add-button:hover { background: #e65d4b; }
+    .add-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+
+    .cheer {
+      margin: 18px 0 0;
+      padding: 12px;
+      border-radius: 13px;
+      background: #eaf6ff;
+      color: #477995;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 15px;
+      color: #958c7e;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 22px 12px; }
+      .card { padding: 17px; box-shadow: 5px 5px 0 var(--ink); }
+      .add-form { grid-template-columns: minmax(0, 1fr) auto; }
+      .add-form select { grid-column: 1; }
+      .add-button { grid-column: 2; grid-row: 1 / span 2; height: auto; }
+      .tag { display: none; }
+    }
+  </style>
 </head>
 <body>
-<canvas id="sky"></canvas>
-<div class="glow g1"></div>
-<div class="glow g2"></div>
+  <main class="app">
+    <header class="header">
+      <div class="eyebrow">☀️ 今日份的小目标</div>
+      <h1>今天也要元气满满！</h1>
+      <p class="subtitle">一点一点完成，也很了不起。</p>
+    </header>
 
-<div class="copy" id="copy">
-  <div class="lines" id="lines"></div>
-  <div id="askWrap">
-    <p class="ask" id="askText">你愿意，做我的女朋友吗？</p>
-    <div class="btns">
-      <button id="yesBtn">愿 意</button>
-      <button id="noBtn">再想想</button>
-    </div>
-    <p class="hint" id="hint">（那个按钮……好像不太想被点到）</p>
-  </div>
-</div>
+    <section class="card">
+      <div class="date-row">
+        <div>
+          <div class="date-label">今天是</div>
+          <div class="date" id="today"></div>
+        </div>
+        <div class="sticker" aria-hidden="true">⭐</div>
+      </div>
 
-<div class="final hidden" id="scene2">
-  <h1>谢谢你，选中了我 ✨</h1>
-  <p>从今天起，你的快乐我承包一半，烦恼也分我一半。</p>
-  <p id="sign"></p>
-</div>
+      <div class="progress-box">
+        <div class="progress-track" aria-label="今日完成进度">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 / 0</div>
+      </div>
 
-<script>
-/* ============================================================
-   ① 想说的话：一行一句，会一个字一个字打出来。改成你自己的。
-   ============================================================ */
-const CONFESSION = [
-  "嗨，是我。",
-  "有些话在嘴边绕了很久，",
-  "还是想认认真真地告诉你——",
-  "遇见你之后，我的日子开始有了重点。",
-  "我会记得你随口说过的小事，",
-  "也会因为你的一句“在忙吗”，开心一整个下午。",
-];
-/* ② 署名 */
-const MY_NAME = "—— 一个喜欢你很久的人";
+      <div class="section-title">
+        <span>我的打卡清单</span>
+        <small>完成一项就点一下 ✓</small>
+      </div>
 
-/* ============================================================
-   爱心粒子背景
-   ============================================================ */
-const cvs = document.getElementById('sky');
-const ctx = cvs.getContext('2d');
-let W = 0, H = 0, DPR = 1, hx = 0, hy = 0, scale = 1, wide = true;
-let particles = [], sparks = [];
+      <ul class="task-list" id="taskList"></ul>
 
-function heartXY(t){
-  return [16 * Math.pow(Math.sin(t), 3),
-          13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)];
-}
+      <form class="add-form" id="addForm">
+        <input id="taskInput" type="text" maxlength="60"
+               placeholder="添加一个想完成的小任务…" required>
+        <select id="categorySelect" aria-label="任务分类">
+          <option>学习</option>
+          <option>生活</option>
+          <option>运动</option>
+          <option>其他</option>
+        </select>
+        <button class="add-button" type="submit">＋ 添加</button>
+      </form>
 
-function heartTargets(){
-  const pts = [];
-  const N = 200;
-  for (let i = 0; i < N; i++){
-    const t = (Math.PI * 2 * i) / N;
-    const [x, y] = heartXY(t);
-    pts.push([x, -y]);
-  }
-  for (let k = 1; k <= 2; k++){          // 内层，做出实心感
-    const s = 0.3 + k * 0.19, M = 42;
-    for (let i = 0; i < M; i++){
-      const t = (Math.PI * 2 * i) / M;
-      const [x, y] = heartXY(t);
-      pts.push([x * s, -y * s]);
+      <p class="cheer" id="cheer">把想做的事情写下来，今天就从一小步开始吧！</p>
+    </section>
+
+    <div class="footer">你的任务和打卡记录保存在当前浏览器中</div>
+  </main>
+
+  <script>
+    const TASKS_KEY = "cute-checkin-tasks-v1";
+    const RECORDS_KEY = "cute-checkin-records-v1";
+
+    const defaultTasks = [
+      { id: "sample-1", name: "喝一杯水", category: "生活" },
+      { id: "sample-2", name: "阅读 10 分钟", category: "学习" },
+      { id: "sample-3", name: "活动一下身体", category: "运动" }
+    ];
+
+    let tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || "null") || defaultTasks;
+    let records = JSON.parse(localStorage.getItem(RECORDS_KEY) || "{}");
+
+    const list = document.getElementById("taskList");
+    const today = new Date();
+    const dateKey = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0")
+    ].join("-");
+    const completed = new Set(records[dateKey] || []);
+
+    document.getElementById("today").textContent =
+      new Intl.DateTimeFormat("zh-CN", {
+        year: "numeric", month: "long", day: "numeric", weekday: "long"
+      }).format(today);
+
+    function save() {
+      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+      records[dateKey] = [...completed];
+      localStorage.setItem(RECORDS_KEY, JSON.stringify(records));
     }
-  }
-  return pts;
-}
 
-const PAL = ['#ff3b6b','#ff6b9d','#ff9ec4','#ffd1e2','#c9a7ff','#ffffff'];
+    function render() {
+      list.innerHTML = "";
 
-function layout(){
-  const w = window.innerWidth, h = window.innerHeight;
-  wide = w >= 900 && h >= 560;
-
-  if (wide){
-    // 爱心占左半边，文字在右侧 42vw 内
-    hx = w * 0.265;
-    hy = h * 0.47;
-    scale = Math.min((w * 0.44) / 38, (h * 0.86) / 34);
-  } else {
-    // 爱心在上方，文字沉在底部渐变里
-    hx = w * 0.5;
-    hy = h * (h < 560 ? 0.34 : 0.30);
-    scale = Math.min((w * 0.9) / 38, (h * 0.42) / 34);
-  }
-  return { w, h };
-}
-
-function buildParticles(){
-  const targets = heartTargets();
-  particles = targets.map(([tx, ty]) => {
-    const a = Math.random() * Math.PI * 2;
-    const r = Math.max(W, H) * (0.5 + Math.random() * 0.7);
-    return {
-      x: hx + Math.cos(a) * r,
-      y: hy + Math.sin(a) * r,
-      s: 0.7 + Math.random() * 2.1,
-      c: PAL[(Math.random() * PAL.length) | 0],
-      delay: Math.random() * 850,
-      ease: 0.014 + Math.random() * 0.032,
-      ph: Math.random() * Math.PI * 2,
-      tx, ty
-    };
-  });
-  sparks = [];
-}
-
-function resize(){
-  DPR = Math.min(window.devicePixelRatio || 1, 2);
-  const { w, h } = layout();
-  W = w; H = h;
-  cvs.style.width = W + 'px';
-  cvs.style.height = H + 'px';
-  cvs.width = Math.floor(W * DPR);
-  cvs.height = Math.floor(H * DPR);
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  buildParticles();
-  ctx.fillStyle = '#0a0612';
-  ctx.fillRect(0, 0, W, H);
-}
-window.addEventListener('resize', resize);
-
-/* 烟花（终幕用） */
-function burst(n){
-  for (let i = 0; i < n; i++){
-    const a = Math.random() * Math.PI * 2;
-    const sp = 1.5 + Math.random() * 5.5;
-    sparks.push({
-      x: W * (0.15 + Math.random() * 0.7),
-      y: H * (0.12 + Math.random() * 0.5),
-      vx: Math.cos(a) * sp,
-      vy: Math.sin(a) * sp - 1.1,
-      life: 1,
-      d: 0.008 + Math.random() * 0.012,
-      c: ['#ff3b6b','#ff8fb3','#ffd76b','#c9a7ff','#7ce7ff','#ffffff'][(Math.random() * 6) | 0],
-      s: 1 + Math.random() * 2.4
-    });
-  }
-}
-
-const T0 = performance.now();
-function frame(now){
-  const t = now - T0;
-
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = 'rgba(10, 6, 18, 0.30)';
-  ctx.fillRect(0, 0, W, H);
-
-  // 远处闪烁的星
-  for (let i = 0; i < 30; i++){
-    const x = ((i * 137.5) % 100) / 100 * W;
-    const y = ((i * 71.3) % 100) / 100 * H;
-    const tw = 0.3 + 0.7 * Math.abs(Math.sin(t * 0.0011 + i * 1.7));
-    ctx.fillStyle = 'rgba(255,236,246,' + (tw * 0.45).toFixed(3) + ')';
-    ctx.beginPath(); ctx.arc(x, y, 0.8 + tw, 0, 7); ctx.fill();
-  }
-
-  // 爱心：外圈柔光 + 实心点（普通混合，保留粉红色调）
-  for (const p of particles){
-    if (t > p.delay){
-      const wob = Math.sin(t * 0.0018 + p.ph) * 1.1;
-      const gx = hx + p.tx * scale + wob;
-      const gy = hy + p.ty * scale + wob;
-      p.x += (gx - p.x) * p.ease;
-      p.y += (gy - p.y) * p.ease;
-    }
-    ctx.globalAlpha = 0.13;
-    ctx.fillStyle = p.c;
-    ctx.beginPath(); ctx.arc(p.x, p.y, p.s * 2.6, 0, 7); ctx.fill();
-    ctx.globalAlpha = 0.92;
-    ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, 7); ctx.fill();
-  }
-
-  // 烟花
-  for (let i = sparks.length - 1; i >= 0; i--){
-    const s = sparks[i];
-    s.x += s.vx; s.y += s.vy;
-    s.vy += 0.055; s.vx *= 0.985; s.vy *= 0.985;
-    s.life -= s.d;
-    if (s.life <= 0){ sparks.splice(i, 1); continue; }
-    ctx.globalAlpha = Math.max(s.life, 0);
-    ctx.fillStyle = s.c;
-    ctx.beginPath(); ctx.arc(s.x, s.y, s.s * Math.max(s.life, .2), 0, 7); ctx.fill();
-  }
-
-  ctx.globalAlpha = 1;
-  ctx.globalCompositeOperation = 'source-over';
-  requestAnimationFrame(frame);
-}
-
-/* ============================================================
-   打字机
-   ============================================================ */
-const linesEl = document.getElementById('lines');
-const askWrap = document.getElementById('askWrap');
-
-function typeLine(text, el){
-  return new Promise(resolve => {
-    let i = 0;
-    el.classList.add('show');
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    el.appendChild(cursor);
-    (function step(){
-      if (i < text.length){
-        const ch = text[i++];
-        cursor.insertAdjacentText('beforebegin', ch);
-        const pause = /[，。？！、；：]/.test(ch) ? 230 : 92;
-        setTimeout(step, pause);
-      } else {
-        cursor.remove();
-        setTimeout(resolve, 430);
+      if (tasks.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty";
+        empty.textContent = "清单还是空的，添加一个小目标吧！";
+        list.appendChild(empty);
       }
-    })();
-  });
-}
 
-async function play(){
-  for (const text of CONFESSION){
-    const el = document.createElement('div');
-    el.className = 'line';
-    linesEl.appendChild(el);
-    await typeLine(text, el);
-  }
-  askWrap.classList.add('show');
-  document.getElementById('askText').classList.add('pop');
-  document.getElementById('hint').classList.add('show');
-  burst(70);
-}
+      tasks.forEach(task => {
+        const isDone = completed.has(task.id);
+        const item = document.createElement("li");
+        item.className = `task${isDone ? " done" : ""}`;
 
-/* ============================================================
-   会躲的按钮
-   ============================================================ */
-const noBtn = document.getElementById('noBtn');
-let dodges = 0;
+        const check = document.createElement("button");
+        check.className = "check";
+        check.type = "button";
+        check.setAttribute("aria-label", isDone ? "取消完成" : "标记完成");
+        check.textContent = isDone ? "✓" : "";
+        check.addEventListener("click", () => {
+          if (completed.has(task.id)) completed.delete(task.id);
+          else completed.add(task.id);
+          save();
+          render();
+        });
 
-function flee(){
-  const pad = 70;
-  const maxX = Math.max(window.innerWidth / 2 - noBtn.offsetWidth / 2 - pad, 40);
-  const maxY = Math.max(window.innerHeight / 2 - noBtn.offsetHeight / 2 - pad, 40);
-  const nx = (Math.random() * 2 - 1) * maxX;
-  const ny = (Math.random() * 2 - 1) * maxY;
-  noBtn.style.transition = 'transform .34s cubic-bezier(.2,.9,.3,1.35)';
-  noBtn.style.transform = 'translate(' + nx + 'px,' + ny + 'px) rotate(' + ((Math.random() * 2 - 1) * 12) + 'deg) scale(.94)';
-  dodges++;
-  const msgs = ['再想想', '真的？', '别跑呀', '你确定？', '再考虑下', '呜呜呜', '不给点'];
-  noBtn.textContent = msgs[Math.min(dodges, msgs.length - 1)];
-}
+        const name = document.createElement("span");
+        name.className = "task-name";
+        name.textContent = task.name;
 
-document.addEventListener('mousemove', e => {
-  if (!askWrap.classList.contains('show')) return;
-  const r = noBtn.getBoundingClientRect();
-  const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
-  if (d < 135) flee();
-});
-noBtn.addEventListener('touchstart', e => { e.preventDefault(); flee(); }, { passive: false });
-noBtn.addEventListener('click', e => { e.preventDefault(); flee(); });
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.dataset.category = task.category;
+        tag.textContent = task.category;
 
-/* ============================================================
-   终幕
-   ============================================================ */
-document.getElementById('sign').textContent = MY_NAME;
+        const remove = document.createElement("button");
+        remove.className = "delete";
+        remove.type = "button";
+        remove.setAttribute("aria-label", `删除任务：${task.name}`);
+        remove.title = "删除任务";
+        remove.textContent = "×";
+        remove.addEventListener("click", () => {
+          tasks = tasks.filter(item => item.id !== task.id);
+          completed.delete(task.id);
+          save();
+          render();
+        });
 
-document.getElementById('yesBtn').addEventListener('click', () => {
-  const copy = document.getElementById('copy');
-  copy.style.transition = 'opacity .7s ease, transform .7s ease';
-  copy.style.opacity = '0';
-  copy.style.transform = 'scale(.95)';
-  setTimeout(() => {
-    copy.classList.add('hidden');
-    const s2 = document.getElementById('scene2');
-    s2.classList.remove('hidden');
-    requestAnimationFrame(() => s2.classList.add('show'));
-    for (let i = 0; i < 10; i++) setTimeout(() => burst(90), i * 250);
-    setInterval(() => burst(55), 1700);
-  }, 700);
-});
+        item.append(check, name, tag, remove);
+        list.appendChild(item);
+      });
 
-/* 启动 */
-resize();
-requestAnimationFrame(frame);
-setTimeout(play, 800);
-</script>
+      const doneCount = tasks.filter(task => completed.has(task.id)).length;
+      const percent = tasks.length ? Math.round(doneCount / tasks.length * 100) : 0;
+      document.getElementById("progressFill").style.width = `${percent}%`;
+      document.getElementById("progressText").textContent =
+        `${doneCount} / ${tasks.length}（${percent}%）`;
+
+      const cheer = document.getElementById("cheer");
+      if (tasks.length > 0 && doneCount === tasks.length) {
+        cheer.textContent = "🎉 全部完成！今天的你超棒，给自己一个大大的赞！";
+      } else if (doneCount > 0) {
+        cheer.textContent = "✨ 很棒，已经完成一些啦，继续加油！";
+      } else {
+        cheer.textContent = "把想做的事情写下来，今天就从一小步开始吧！";
+      }
+    }
+
+    document.getElementById("addForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const input = document.getElementById("taskInput");
+      const name = input.value.trim();
+      if (!name) return;
+
+      tasks.push({
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        name,
+        category: document.getElementById("categorySelect").value
+      });
+
+      input.value = "";
+      save();
+      render();
+      input.focus();
+    });
+
+    render();
+  </script>
 </body>
 </html>
